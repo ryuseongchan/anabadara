@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+		<th:block th:replace = "fragments/config::configFragment"></th:block>
+	</head>
+	<header th:replace = "fragments/head::headerFragment"></header>
+	<body>
+		<div class="container">
+			<th:block layout:fragment="content"/>
+		</div>
+	</body>
+	<footer th:replace = "fragments/footer::footerFragment"></footer>
+	
+</html>

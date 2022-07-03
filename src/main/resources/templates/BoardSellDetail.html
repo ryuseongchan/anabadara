@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/layout}">
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+		<th:block th:replace = "fragments/config::configFragment"></th:block>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.js"></script>
+	</head>
+	
+	<th:block layout:fragment="content">
+		<label class="col-sm-12 btn btn-outline-dark disabled mt-3" style="font-size: 20pt; font-weight: bold;">[(${info.title })]</label>
+		<div class="mt-3">
+			<div class="row">
+		 		<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">작성자</label>
+					<span class="form-control"> [(${info.name })]</span>
+				</div>
+				
+				<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">카테고리</label>
+					<span style="margin: 0; padding: 0;" class="form-control">[(${info.category })]</span>
+				</div>
+				
+				<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">제품</label>
+					<span style="margin: 0; padding: 0;" class="form-control">[(${info.product })]</span>
+				</div>
+				
+				<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">가격</label>
+					<span style="margin: 0; padding: 0;" class="form-control">[(${info.price })]</span>
+				</div>
+				
+				<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">거래장소</label>
+					<span style="margin: 0; padding: 0;" class="form-control">[(${info.place })]</span>
+				</div>
+				
+				<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">사진</label>
+					<span style="margin: 0; padding: 0;" class="form-control">[(${info.image })]</span>
+				</div>
+			
+				<div class="input-group mt-3">
+					<span style="margin: 0; padding: 0;" class="form-control">[(${info.content })]</span>
+				</div>
+				<div class="input-group m-3 mb-2">
+					<label class="btn btn-outline-dark disabled me-2" style="width: 100px">댓  글</label>
+				</div>
+					<div id = "commentList">
+						<div class="input-group mb-3" th:each="comment : ${info.comments}">
+							<label class="btn btn-outline-dark disabled me-2" style="width: 100px">[(${comment.name })]</label>
+							<span style="margin: 0; padding: 0;" class="form-control">[(${comment.content })]</span>
+							<span th:if = "${session.user.id}==${comment.id}"><button th:onclick="deleteComment([(${comment.commentNum})], [(${comment.sellNum})])">삭제</button></span>
+							<span th:if = "${session.user.id}==${comment.id}"><button th:onclick="openModal([(${comment.commentNum})])">수정</button></span>
+						</div>
+					</div>
+					<sec:authorize access="isAuthenticated()">
+						<div class="input-group mx-3">
+							<label class="btn btn-outline-dark disabled me-2" style="width: 100px">[(${info.name })]</label>
+							<span style="margin: 0; padding: 0;" class="form-control">
+								<input id = "content" type="text" required = "required" placeholder="댓글을 입력해주세요" style="height:100%; width: 80%;"/>
+								<button onclick="insertComment();">등록</button>
+							</span>
+						</div>
+					</sec:authorize>
+				<div th:if="${session.user.id}==${info.id}">
+						<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+						<button type = "button" class="form-control input-sm btn btn-outline-danger mb-3" th:onclick = "deleteBoardSell([(${info.sellNum})])">삭제</button>
+						<button type = "button" class="form-control input-sm btn btn-outline-danger mb-3" th:onclick = "location.href='/boardsell/update/[(${info.sellNum})]'">수정</button>
+				</div>
+		    	<a href="javascript:window.history.back();" class="form-control input-sm btn btn-outline-danger mb-3">돌아가기</a>
+		    	
+		    	
+		    	
+		    	<div class="modal" id="updateModal">
+				  <div class="modal-dialog modal-dialog-centered">
+				    <div class="modal-content">
+				      <!-- Modal Header -->
+				      <div class="modal-header">
+				        <h4 class="modal-title">댓글 수정</h4>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				      </div>
+				        <input type = "hidden" id = "commentNum_update">
+				        <input type = "text" id = "content_update" required = "required">
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-danger" onclick="updateComment()">수정하기</button>
+				        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">취소</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+				
+			</div>
+		</div>
+		
+		
+	<script th:inline="javascript">
+		function openModal(commentNum){
+			$('#updateModal').modal("toggle");
+			document.querySelector("#commentNum_update").value = commentNum;
+		}
+		function deleteBoardSell(sellNum){
+			$.ajax({
+				url : "/boardsell/"+sellNum,
+				type : "delete",
+				success : function(result) {
+					alert(result);
+				}
+			}).done(function(){
+				location.href = "/boardsell/";
+			});
+		}
+		
+		function insertComment(){
+				var commentJ = { "content" : $("#content").val(),
+						"id" : [[${session.user.id}]],
+						"name" : [[${session.user.name}]],
+						"sellNum" : [[${info.sellNum}]]
+						}; 
+				$.ajax({
+					url : "/commentsell",
+					async : false,
+					data : JSON.stringify(commentJ),
+					contentType: "application/json",
+					type : "post",
+					success : function(result) {
+						$('#content').val('');
+					}
+				}).done(function(result){
+					$('#commentList').replaceWith(result);
+				});
+			}
+		
+		function updateComment(){
+				var commentJ = { "content" : $("#content_update").val()	}; 
+				var commentNum = $("#commentNum_update").val();
+				$.ajax({
+					url : "/commentsell/"+commentNum,
+					async : false,
+					data : JSON.stringify(commentJ),
+					contentType: "application/json",
+					type : "put",
+					success : function(result) {
+						$('#content_update').val('');
+						$('#updateModal').modal('hide')
+					}
+				}).done(function(result){
+					$('#commentList').replaceWith(result);
+				});
+			}
+		
+		function deleteComment(commentNum, sellNum){
+				$.ajax({
+					url : "/commentsell/"+commentNum+"/"+sellNum,
+					async : false,
+					type : "delete",
+				}).done(function(result){
+					$('#commentList').replaceWith(result);
+				});
+			}
+	</script>
+	</th:block>
+</html>

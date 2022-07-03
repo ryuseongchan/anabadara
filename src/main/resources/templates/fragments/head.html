@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<meta charset="UTF-8">
+	</head>
+	<div th:fragment="headerFragment">
+	
+		<div class="container">
+			<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+				<div class="container-fluid">
+					<button id="custom_toggler" onclick="collapseAction()" class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="navbar-collapse collapse" id="custom_collapse">
+						<ul class="navbar-nav">
+							<th:block sec:authorize="isAuthenticated()">
+								<li class="nav-item" >
+									<div class="nav-link active" th:text="${session.user.name}"></div>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link active" href="/logout">로그아웃</a>
+								</li>
+							</th:block>
+							<th:block sec:authorize="isAnonymous()">
+								<li class="nav-item">
+									<a class="nav-link active" href="/login">로그인</a>
+								</li>
+							</th:block>
+
+							<sec:authorize access="isAuthenticated()">
+								<li class="nav-item">
+									<a href="/boardsell" class="nav-link active">아나 받아라</a>
+								</li>
+							</sec:authorize>
+							<sec:authorize access="isAuthenticated()">
+								<li class="nav-item">
+									<a href="/boardbuy" class="nav-link active">이리 가온나</a>
+								</li>
+							</sec:authorize>
+						</ul>
+					</div>
+					<a href="/" class="navbar-brand">Home</a>
+				</div>
+			</nav>
+		</div>
+
+	</div>
+</html>

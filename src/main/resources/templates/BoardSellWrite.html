@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/layout}">
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+		<th:block th:replace = "fragments/config::configFragment"></th:block>
+	</head>
+	
+	<th:block layout:fragment="content">
+		<form id = "write_frm" action = "/boardsell" method="post">
+		<label class="col-sm-12 btn btn-outline-dark disabled mt-3" style="font-size: 20pt; font-weight: bold;">구매글 등록</label>
+		<div class="mt-3">
+			<div class="row">
+		 		<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">작성자</label>
+					<span class="form-control" th:text="${session.user.name }"></span>
+				</div>
+				
+				<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">제목</label>
+					<span style="margin: 0; padding: 0;" class="form-control"><input name="title" type="text" autofocus="autofocus" required="required" placeholder="제목을 입력해주세요" style="height:100%; width: 100%;"/></span>
+				</div>
+				
+				<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">카테고리</label>
+					<span style="margin: 0; padding: 0;" class="form-control"><input name="category" type="text" required="required" placeholder="카테고리를 선택해주세요" style="height:100%; width: 100%;"/></span>
+				</div>
+				
+				<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">제품</label>
+					<span style="margin: 0; padding: 0;" class="form-control"><input name="product" type="text" required="required" placeholder="제품명을 입력해주세요" style="height:100%; width: 100%;"/></span>
+				</div>
+				
+				<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">사진</label>
+					<span style="margin: 0; padding: 0;" class="form-control"><input name="image" type="text" required="required" placeholder="사진을 입력해주세요" style="height:100%; width: 100%;"/></span>
+				</div>
+				
+				<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">가격</label>
+					<span style="margin: 0; padding: 0;" class="form-control"><input name="price" type="text" required="required" placeholder="가격을 입력하세요" style="height:100%; width: 100%;"/></span>
+				</div>
+				
+				<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">거래장소</label>
+					<span style="margin: 0; padding: 0;" class="form-control"><input name="place" type="text" required="required" placeholder="거래장소를 입력하세요" style="height:100%; width: 100%;"/></span>
+				</div>
+				
+			</div>
+			<label class="col-sm-12 btn btn-outline-dark disabled" style="font-size: 20pt; font-weight: bold;"> 내용</label>
+			<div class="input-group mt-3">
+				<span style="margin: 0; padding: 0; height: 100px;" class="form-control"><textarea name = "content" required="required" placeholder="내용을 입력해주세요" rows="3" maxlength="160" style="height:100%; width: 100%;"></textarea></span>
+			</div>
+		</div>
+		<div class="row col text-center">
+		   <div class="container mt-3">
+		   	  <input type="hidden" name = "id" th:value = "${session.user.id }">
+		   	  <input type="hidden" name = "name" th:value = "${session.user.name }">
+		   	  <input type="submit" value = "작성완료" class="form-control input-sm btn btn-primary mb-3"/>
+		      <input type="reset" value="취소" class="form-control input-sm btn btn-outline-danger mb-3"/>
+		      <a href="" class="form-control input-sm btn btn-outline-danger mb-3">돌아가기</a>
+		   </div>
+		</div>
+	</form>
+		
+	</th:block>
+	
+</html>

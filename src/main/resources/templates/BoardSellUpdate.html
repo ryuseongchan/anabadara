@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/layout}">
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+		<th:block th:replace = "fragments/config::configFragment"></th:block>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	</head>
+	
+	<th:block layout:fragment="content">
+		<form id = "update_frm">
+		<label class="col-sm-12 btn btn-outline-dark disabled mt-3" style="font-size: 20pt; font-weight: bold;">글 수정</label>
+		<div class="mt-3">
+			<div class="row">
+				<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">제목</label>
+					<span style="margin: 0; padding: 0;" class="form-control"><input id="title" type="text" th:value = "${info.title }" autofocus="autofocus" required="required" style="height:100%; width: 100%;"/></span>
+				</div>
+				
+				<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">카테고리</label>
+					<span style="margin: 0; padding: 0;" class="form-control"><input id="category" type="text" th:value = "${info.category }"required="required" style="height:100%; width: 100%;"/></span>
+				</div>
+				
+				<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">사진</label>
+					<span style="margin: 0; padding: 0;" class="form-control"><input id="image" type="text" th:value = "${info.image}" required="required" placeholder="제목을 입력해주세요" style="height:100%; width: 100%;"/></span>
+				</div>
+				
+				<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">제품</label>
+					<span style="margin: 0; padding: 0;" class="form-control"><input id="product" type="text" th:value = "${info.product }" required="required" placeholder="제목을 입력해주세요" style="height:100%; width: 100%;"/></span>
+				</div>
+				
+				<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">가격</label>
+					<span style="margin: 0; padding: 0;" class="form-control"><input id="price" type="text" th:value = "${info.price }" required="required" placeholder="제목을 입력해주세요" style="height:100%; width: 100%;"/></span>
+				</div>
+				
+				<div class="input-group mb-3">
+		 			<label class="btn btn-outline-dark disabled me-2" style="width: 150px">거래장소</label>
+					<span style="margin: 0; padding: 0;" class="form-control"><input id="place" type="text" th:value = "${info.place }" required="required" placeholder="제목을 입력해주세요" style="height:100%; width: 100%;"/></span>
+				</div>
+				
+			</div>
+			<label class="col-sm-12 btn btn-outline-dark disabled" style="font-size: 20pt; font-weight: bold;"> 내용</label>
+			<div class="input-group mt-3">
+				<span style="margin: 0; padding: 0; height: 100px;" class="form-control"><textarea id = "content" required="required" placeholder="내용을 입력해주세요" rows="3" maxlength="160" style="height:100%; width: 100%;">[(${info.content })]</textarea></span>
+			</div>
+		</div>
+		<div class="row col text-center">
+		   <div class="container mt-3">
+		   	  <button type="button" class="form-control input-sm btn btn-primary mb-3" th:onclick = "updateBoardBuy([(${info.buyNum})])">수정하기</button>
+		      <input type="reset" value="취소" class="form-control input-sm btn btn-outline-danger mb-3"/>
+		      <a href="" class="form-control input-sm btn btn-outline-danger mb-3">돌아가기</a>
+		   </div>
+		</div>
+		</form>
+	<script>
+		function updateBoardBuy(sellNum){
+			var updateData = { "title" : $('#title').val(),
+							"category" : $('#category').val(),
+							"image" : $('#image').val(),
+							"product" : $('#product').val(),
+							"price" : $('#price').val(),
+							"place"	: $('#place').val(),	
+							"content"	: $('#content').val()				
+							}; 
+			$.ajax({
+				url : "/boardsell/"+sellNum,
+				type : "put",
+				data : JSON.stringify(updateData),
+				contentType : "application/json",
+				success : function(result) {
+					alert("수정되었습니다.");
+				}, error:function(jqXHR, textStatus, errorThrown) {
+		   	  		alert("실패");
+		        }
+			}).done(function(){
+				location.href = "/boardbuy/";
+			});
+		}
+	</script>
+	</th:block>
+	
+		
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> 
+<script type="text/javascript" src="js/bootstrap.js"></script>
+<head>
+	<meta charset="UTF-8">
+</head>
+	<div id = "commentList">
+		<div class="input-group mb-3" th:each="comment : ${comments}">
+			<label class="btn btn-outline-dark disabled me-2" style="width: 100px">[(${comment.name })]</label>
+			<span style="margin: 0; padding: 0;" class="form-control">[(${comment.content })]</span>
+			<span th:if = "${session.user.id}==${comment.id}"><button th:onclick="deleteComment([(${comment.commentNum})], [(${comment.sellNum})])">삭제</button></span>
+			<span th:if = "${session.user.id}==${comment.id}"><button th:onclick="openModal([(${comment.commentNum})])">수정</button></span>
+		</div>
+	</div>
+	
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/layout}">
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+		<th:block th:replace = "fragments/config::configFragment"></th:block>
+	</head>
+	
+	<th:block layout:fragment="content">
+		<div class="mt-3">
+		<div class="mb-3">
+			<label class="col-sm-12 btn btn-outline-dark disabled me-2" style="font-size: 20pt; font-weight: bold;">이리 가온나</label>
+		</div>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>번호</th>
+						<th>작성자</th>
+						<th>제목</th>
+						<th>제품</th>
+						<th>가격</th>
+						<th>거래장소</th>
+					</tr>
+				</thead>
+					<tr th:each = "i : ${boardList}">
+						<td><a th:href = "@{|/boardbuy/${i.buyNum}|}" >[(${i.buyNum})]</a></td>
+						<td>[(${i.name})]</td>
+						<td>[(${i.title})]</td>
+						<td>[(${i.product})]</td>
+						<td>[(${i.price})]</td>
+						<td>[(${i.place})]</td>
+					</tr>			
+			</table>
+		<th:block sec:authorize="isAuthenticated()">
+			<div class="row col text-center">
+			   <div class="container mt-3">
+			   	  <input type="button" value="글쓰기" onclick="location.href='/boardbuy/write'" class="form-control input-sm btn btn-primary mb-3"/>
+			   </div>
+			</div>
+		</th:block>
+	</div>
+	    <ul class="pagination justify-content-center"
+	        th:with="start=${(boardList.number/10)*10 + 1},
+	                    last=(${start + 9 < boardList.totalPages ? start + 9 : boardList.totalPages})">
+	        <li class="page-item">
+	            <a class = "page-link" th:href="@{/boardbuy(page=1)}">First</a>
+	        </li>
+	
+	        <li th:class="${boardList.first} ? 'disabled' : 'page-item'">
+	            <a class = "page-link" th:href="${boardList.first} ? '#' :@{/boardbuy(page=${boardList.number}, searchword=${searchword})}">Previous</a>
+	        </li>
+	
+	        <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == boardList.number + 1} ? 'page-item active'">
+	            <a class = "page-link" th:text="${page}" th:href="@{/boardbuy(page=${page}, searchword=${searchword})}"></a>
+	        </li>
+	
+	        <li th:class="${boardList.last} ? 'disabled' : 'page-item'">
+	            <a class = "page-link" th:href="${boardList.last} ? '#' : @{/boardbuy(page=${boardList.number + 2})}">Next</a>
+	        </li>
+	        <li>
+	            <a class = "page-link" th:href="@{/boardbuy(page=${boardList.totalPages}, searchword=${searchword})}">Last</a>
+	        </li>
+	    </ul>
+	    
+	    <form action="/boardbuy" method="get" class="d-flex">
+			<input type="text" name="searchword" class="form-control me-2"/>
+			<input type="submit" value="검색" class="btn btn-outline-dark"/>
+		</form>
+		<br>
+	</th:block>
+	
+</html>
